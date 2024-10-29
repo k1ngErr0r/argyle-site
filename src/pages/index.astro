@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Services from '../components/Services.astro';
+import Contact from '../components/Contact.astro';
+
+---
+
+<Layout title="Argyle Technology">
+  <main>
+    <Hero />
+    <About />
+    <Services />
+    <Contact />
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: 100%;
+    color: white;
+    font-size: 20px;
+    line-height: 1.6;
+  }
+</style>

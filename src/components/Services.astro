@@ -1,0 +1,129 @@
+---
+const services = [
+  {
+    title: "Expert IT Consultation",
+    description: "Navigate the complexities of IT with confidence. Our expert consultation services offer strategic planning, compliance guidance, and technical advice.",
+    icon: "https://img.icons8.com/fluency/96/consultation.png"
+  },
+  {
+    title: "Tailored IT Solutions",
+    description: "Every business is unique, and so are its IT needs. We offer customized IT solutions designed to meet your specific requirements.",
+    icon: "https://img.icons8.com/fluency/96/settings.png"
+  },
+  {
+    title: "Proactive IT Support",
+    description: "Our proactive IT support ensures your systems are always running smoothly. We monitor your network and resolve issues before they impact your business.",
+    icon: "https://img.icons8.com/fluency/96/technical-support.png"
+  },
+  {
+    title: "Comprehensive Cybersecurity",
+    description: "Protect your business from evolving cyber threats with our comprehensive cybersecurity solutions.",
+    icon: "https://img.icons8.com/fluency/96/cyber-security.png"
+  },
+  {
+    title: "Seamless Cloud Migration",
+    description: "Transition to the cloud with ease. Our cloud migration services ensure a smooth, secure, and efficient move from on-premises infrastructure.",
+    icon: "https://img.icons8.com/fluency/96/cloud-storage.png"
+  },
+  {
+    title: "Reliable Disaster Recovery",
+    description: "Be prepared for the unexpected with our robust disaster recovery and backup solutions.",
+    icon: "https://img.icons8.com/fluency/96/data-backup.png"
+  }
+];
+---
+
+<section id="services" class="services">
+  <h2>What We Can Do For Your Business Today</h2>
+  <div class="services-grid">
+    {services.map((service, index) => (
+      <div class="service-card" data-aos="fade-up" data-aos-delay={index * 100}>
+        <div class="service-icon">
+          <img src={service.icon} alt={service.title} loading="lazy" />
+        </div>
+        <h3>{service.title}</h3>
+        <p>{service.description}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .services {
+    padding: 6rem 2rem;
+    background-color: #fff;
+  }
+
+  h2 {
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 4rem;
+    font-size: 2.5rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .service-card {
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+
+  .service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+  }
+
+  .service-icon {
+    background-color: rgba(209, 99, 4, 0.1);
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .service-card:hover .service-icon {
+    background-color: rgba(209, 99, 4, 0.2);
+  }
+
+  .service-icon img {
+    width: 48px;
+    height: 48px;
+  }
+
+  h3 {
+    color: var(--accent);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: var(--accent-dark);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .services {
+      padding: 4rem 1rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 3rem;
+    }
+  }
+</style>

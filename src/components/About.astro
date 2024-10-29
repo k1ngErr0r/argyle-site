@@ -1,0 +1,231 @@
+---
+const slides = [
+  {
+    title: "About Us",
+    content: `At Argyle Technology, we are more than just an IT service provider. We are your strategic partner in navigating the ever-evolving world of technology. We specialise in delivering comprehensive IT solutions tailored to the unique needs of small to medium-sized enterprises.
+
+    With decades of experience within the IT services industry, our team of dedicated professionals is committed to helping businesses like yours thrive. We understand that in today's fast-paced environment, reliable and efficient IT systems are crucial to your success. That's why we offer a wide range of services, from managed IT support and strategic IT consultation to advanced cloud services and cutting-edge AI solutions.`,
+    image: "https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    title: "Our Mission & Values",
+    content: `Our mission is simple: to remove the burden of IT from your shoulders, allowing you to focus on what you do best—growing your business. We believe that every business deserves a bespoke IT strategy that not only meets its current needs but also scales with its future ambitions.
+
+    Client-Centric: Your success is our success. We prioritise your needs and work closely with you to achieve your business goals.
+
+    Integrity: We believe in transparency and honesty in all our dealings. Trust and long-term relationships are at the core of our business.
+
+    Innovation: We are passionate about technology and continuously seek out new ways to improve and innovate our services.`,
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    title: "Why Choose Us?",
+    content: `Local Expertise: As a Glasgow-based company, we understand the unique challenges and opportunities faced by businesses in Scotland and the wider UK.
+
+    Tailored Solutions: We don't believe in one-size-fits-all. Our services are customised to fit your specific requirements, ensuring maximum efficiency and effectiveness.
+
+    Proactive Support: Our proactive approach to IT management means we address potential issues before they become problems, ensuring your systems run smoothly and without interruption.
+
+    Cutting-Edge Technology: From AI integrations to cloud migrations, we leverage the latest technologies to give your business a competitive edge.`,
+    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop"
+  }
+];
+---
+
+<section id="about" class="about">
+  <div class="about-container">
+    {slides.map((slide, index) => (
+      <div class={`about-slide ${index === 0 ? 'active' : ''} ${index % 2 === 0 ? 'normal' : 'reversed'}`}>
+        <div class="about-content">
+          <div class="about-text">
+            <h2>{slide.title}</h2>
+            <div class="content-wrapper">
+              {slide.content.split('\n\n').map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+          <div class="about-image">
+            <img src={slide.image} alt={slide.title} loading="lazy" />
+          </div>
+        </div>
+      </div>
+    ))}
+    <div class="slide-indicators">
+      {slides.map((_, index) => (
+        <button class={`indicator ${index === 0 ? 'active' : ''}`} data-index={index}></button>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding: 6rem 2rem;
+    background-color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .about-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .about-slide {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .about-slide.active {
+    display: block;
+    opacity: 1;
+  }
+
+  .about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-slide.reversed .about-content {
+    direction: rtl;
+  }
+
+  .about-slide.reversed .about-content > * {
+    direction: ltr;
+  }
+
+  .about-text {
+    padding: 2rem;
+  }
+
+  .about-text h2 {
+    color: var(--accent);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .content-wrapper {
+    color: var(--accent-dark);
+  }
+
+  .content-wrapper p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+  }
+
+  .about-image {
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  .about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .about-image:hover img {
+    transform: scale(1.05);
+  }
+
+  .slide-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background-color: #ccc;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.3s ease;
+  }
+
+  .indicator.active {
+    background-color: var(--accent);
+  }
+
+  @media (max-width: 1024px) {
+    .about {
+      padding: 4rem 1rem;
+    }
+
+    .about-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .about-text {
+      padding: 1rem;
+    }
+
+    .about-text h2 {
+      font-size: 2rem;
+    }
+
+    .about-slide.reversed .about-content {
+      direction: ltr;
+    }
+  }
+</style>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.about-slide');
+  const indicators = document.querySelectorAll('.indicator');
+  const slideCount = slides.length;
+  const slideInterval = 8000; // 8 seconds per slide
+
+  function showSlide(index: number) {
+    slides.forEach(slide => {
+      slide.classList.remove('active');
+    });
+    indicators.forEach(indicator => {
+      indicator.classList.remove('active');
+    });
+
+    slides[index].classList.add('active');
+    indicators[index].classList.add('active');
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slideCount;
+    showSlide(currentSlide);
+  }
+
+  // Auto-advance slides
+  let intervalId = setInterval(nextSlide, slideInterval);
+
+  // Click handlers for indicators
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => {
+      clearInterval(intervalId);
+      currentSlide = index;
+      showSlide(currentSlide);
+      intervalId = setInterval(nextSlide, slideInterval);
+    });
+  });
+
+  // Pause on hover
+  const aboutSection = document.querySelector('.about');
+  aboutSection?.addEventListener('mouseenter', () => {
+    clearInterval(intervalId);
+  });
+
+  aboutSection?.addEventListener('mouseleave', () => {
+    intervalId = setInterval(nextSlide, slideInterval);
+  });
+</script>
