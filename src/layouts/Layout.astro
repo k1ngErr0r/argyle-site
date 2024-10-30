@@ -154,6 +154,13 @@ const { title } = Astro.props;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform var(--transition-speed) ease;
   }
 
   .mobile-menu-button span {
@@ -161,7 +168,7 @@ const { title } = Astro.props;
     width: 25px;
     height: 2px;
     background-color: white;
-    margin: 6px 0;
+    margin: 3px 0;
     transition: 0.3s;
   }
 
@@ -184,6 +191,11 @@ const { title } = Astro.props;
       flex-direction: column;
       align-items: center;
       gap: 1.5rem;
+      transition: top var(--transition-speed) ease;
+    }
+
+    .header.scrolled .nav-links {
+      top: var(--header-height-scrolled);
     }
 
     .nav-links.active {
@@ -191,7 +203,7 @@ const { title } = Astro.props;
     }
 
     .mobile-menu-button {
-      display: block;
+      display: flex;
     }
 
     .mobile-menu-button.active span:nth-child(1) {
