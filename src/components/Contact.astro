@@ -4,14 +4,14 @@
 <section id="contact" class="contact">
   <div class="contact-container">
     <h2>Contact us now for a free consultation</h2>
-    <div class="contact-content">
+    <div class="contact-content" id="contact-content">
       <form
         action="https://api.web3forms.com/submit"
         method="POST"
         id="contact-form"
         class="contact-form needs-validation"
         novalidate>
-        <input type="hidden" name="access_key" value="53913f73-6720-4504-b7d6-2276fac4c74e" />
+        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
         <input type="checkbox" class="hidden" style="display:none" name="botcheck" />
         
         <div class="form-group">
@@ -34,7 +34,6 @@
         </div>
 
         <button type="submit">Submit</button>
-        <div id="result" class="form-result"></div>
       </form>
 
       <div class="contact-info">
@@ -42,6 +41,11 @@
         <p>Contact Number: 07834280843</p>
         <p>Email: contact@argyletechnology.co.uk</p>
       </div>
+    </div>
+
+    <div id="message-container" class="message-container hidden">
+      <div id="result" class="form-result"></div>
+      <button id="reset-form" class="reset-button">Send Another Message</button>
     </div>
   </div>
 </section>
@@ -129,9 +133,20 @@
     border-color: #dc3545;
   }
 
-  .form-result {
-    margin-top: 1rem;
+  .message-container {
     text-align: center;
+    padding: 2rem;
+    margin: 0 auto;
+    max-width: 600px;
+  }
+
+  .message-container.hidden {
+    display: none;
+  }
+
+  .form-result {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
   }
 
   .form-result.success {
@@ -140,6 +155,10 @@
 
   .form-result.error {
     color: #dc3545;
+  }
+
+  .reset-button {
+    margin-top: 1rem;
   }
 
   @media (max-width: 768px) {
@@ -153,6 +172,27 @@
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("contact-form");
     const result = document.getElementById("result");
+    const contactContent = document.getElementById("contact-content");
+    const messageContainer = document.getElementById("message-container");
+    const resetButton = document.getElementById("reset-form");
+
+    const showMessage = (message, isSuccess) => {
+      contactContent.style.display = "none";
+      messageContainer.classList.remove("hidden");
+      result.innerHTML = message;
+      result.className = "form-result " + (isSuccess ? "success" : "error");
+    };
+
+    const resetForm = () => {
+      form.reset();
+      form.classList.remove("was-validated");
+      messageContainer.classList.add("hidden");
+      contactContent.style.display = "grid";
+      result.className = "form-result";
+      result.innerHTML = "";
+    };
+
+    resetButton.addEventListener("click", resetForm);
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -167,7 +207,7 @@
       const object = Object.fromEntries(formData);
       const json = JSON.stringify(object);
 
-      result.innerHTML = "Sending...";
+      showMessage("Sending...", true);
 
       fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -180,26 +220,15 @@
         .then(async (response) => {
           let json = await response.json();
           if (response.status == 200) {
-            result.classList.add("success");
-            result.innerHTML = json.message;
+            showMessage(json.message, true);
           } else {
             console.log(response);
-            result.classList.add("error");
-            result.innerHTML = json.message;
+            showMessage(json.message, false);
           }
         })
         .catch((error) => {
           console.log(error);
-          result.classList.add("error");
-          result.innerHTML = "Something went wrong!";
-        })
-        .then(function () {
-          form.reset();
-          form.classList.remove("was-validated");
-          setTimeout(() => {
-            result.innerHTML = "";
-            result.classList.remove("success", "error");
-          }, 5000);
+          showMessage("Something went wrong!", false);
         });
     });
   });
