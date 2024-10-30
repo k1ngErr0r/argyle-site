@@ -46,46 +46,28 @@ const services = [
     icon: "https://raw.githubusercontent.com/k1ngErr0r/argyle-site/refs/heads/main/src/assets/images/live-chat.gif"
   }
 ];
-
-// Duplicate services for infinite scroll effect
-const extendedServices = [...services, ...services];
 ---
 
 <section id="services" class="services">
   <h2>What We Can Do For Your Business Today</h2>
-  
-  <div class="carousel-container">
-    <button class="nav-button prev" aria-label="Previous">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="15 18 9 12 15 6"></polyline>
-      </svg>
-    </button>
-    
-    <div class="services-carousel">
-      <div class="carousel-track">
-        {extendedServices.map((service, index) => (
-          <div class="service-card" data-index={index}>
-            <div class="service-icon">
-              <img src={service.icon} alt={service.title} loading="lazy" />
-            </div>
-            <h3>{service.title}</h3>
-            <p>{service.description}</p>
+  <div class="services-container">
+    <div class="services-track">
+      {[...services, ...services, ...services].map((service) => (
+        <div class="service-card">
+          <div class="service-icon">
+            <img src={service.icon} alt={service.title} loading="lazy" />
           </div>
-        ))}
-      </div>
+          <h3>{service.title}</h3>
+          <p>{service.description}</p>
+        </div>
+      ))}
     </div>
-
-    <button class="nav-button next" aria-label="Next">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 18 15 12 9 6"></polyline>
-      </svg>
-    </button>
   </div>
 </section>
 
 <style>
   .services {
-    padding: 6rem 2rem;
+    padding: 3rem 2rem;
     background-color: #fff;
     overflow: hidden;
   }
@@ -97,28 +79,28 @@ const extendedServices = [...services, ...services];
     font-size: 2.5rem;
   }
 
-  .carousel-container {
-    position: relative;
+  .services-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 40px;
-  }
-
-  .services-carousel {
     overflow: hidden;
-    position: relative;
-    padding: 1rem 0;
+    mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
+    -webkit-mask: linear-gradient(90deg, transparent, white 10%, white 90%, transparent);
   }
 
-  .carousel-track {
+  .services-track {
     display: flex;
-    transition: transform 0.5s ease-in-out;
     gap: 2rem;
+    animation: scroll 120s linear infinite;
+    width: max-content;
+    padding: 0 2rem;
+  }
+
+  .services-track:hover {
+    animation-play-state: paused;
   }
 
   .service-card {
-    flex: 0 0 calc(33.333% - 1.334rem);
-    min-width: calc(33.333% - 1.334rem);
+    flex: 0 0 350px;
     padding: 2rem;
     background: #fff;
     border-radius: 12px;
@@ -158,58 +140,18 @@ const extendedServices = [...services, ...services];
     line-height: 1.6;
   }
 
-  .nav-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    transition: background-color 0.3s ease;
-    z-index: 2;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .carousel-container:hover .nav-button {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .nav-button:hover {
-    background-color: #e67004;
-  }
-
-  .nav-button svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  .nav-button.prev {
-    left: 0;
-  }
-
-  .nav-button.next {
-    right: 0;
-  }
-
-  @media (max-width: 1024px) {
-    .service-card {
-      flex: 0 0 calc(50% - 1rem);
-      min-width: calc(50% - 1rem);
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-100% / 3));
     }
   }
 
   @media (max-width: 768px) {
     .services {
-      padding: 4rem 1rem;
+      padding: 2rem 1rem;
     }
 
     h2 {
@@ -218,211 +160,7 @@ const extendedServices = [...services, ...services];
     }
 
     .service-card {
-      flex: 0 0 100%;
-      min-width: 100%;
-    }
-
-    .carousel-container {
-      padding: 0 20px;
+      flex: 0 0 300px;
     }
   }
 </style>
-
-<script>
-  class Carousel {
-    private track: HTMLElement | null;
-    private cards: HTMLElement[];
-    private prevButton: HTMLButtonElement | null;
-    private nextButton: HTMLButtonElement | null;
-    private cardWidth: number;
-    private currentIndex: number;
-    private cardsPerView: number;
-    private autoScrollInterval: number | null;
-    private isHovered: boolean;
-    private isDragging: boolean;
-    private startPos: number;
-    private currentTranslate: number;
-    private prevTranslate: number;
-
-    constructor() {
-      this.track = document.querySelector('.carousel-track');
-      this.cards = Array.from(document.querySelectorAll('.service-card'));
-      this.prevButton = document.querySelector('.nav-button.prev');
-      this.nextButton = document.querySelector('.nav-button.next');
-      
-      this.cardWidth = 0;
-      this.currentIndex = 0;
-      this.cardsPerView = 3;
-      this.autoScrollInterval = null;
-      this.isHovered = false;
-      this.isDragging = false;
-      this.startPos = 0;
-      this.currentTranslate = 0;
-      this.prevTranslate = 0;
-
-      this.init();
-    }
-
-    private init(): void {
-      this.updateCardsPerView();
-      this.updateCardWidth();
-      this.setupEventListeners();
-      this.startAutoScroll();
-
-      window.addEventListener('resize', () => {
-        this.updateCardsPerView();
-        this.updateCardWidth();
-        this.goToSlide(this.currentIndex);
-      });
-    }
-
-    private updateCardsPerView(): void {
-      if (window.innerWidth <= 768) {
-        this.cardsPerView = 1;
-      } else if (window.innerWidth <= 1024) {
-        this.cardsPerView = 2;
-      } else {
-        this.cardsPerView = 3;
-      }
-    }
-
-    private updateCardWidth(): void {
-      if (!this.track) return;
-      const gap = 32; // 2rem gap
-      this.cardWidth = (this.track.offsetWidth - (gap * (this.cardsPerView - 1))) / this.cardsPerView;
-      this.cards.forEach(card => {
-        card.style.flex = `0 0 ${this.cardWidth}px`;
-        card.style.minWidth = `${this.cardWidth}px`;
-      });
-    }
-
-    private setupEventListeners(): void {
-      if (!this.track) return;
-
-      this.prevButton?.addEventListener('click', () => this.prev());
-      this.nextButton?.addEventListener('click', () => this.next());
-
-      const carousel = document.querySelector('.services-carousel');
-      carousel?.addEventListener('mouseenter', () => {
-        this.isHovered = true;
-        this.stopAutoScroll();
-      });
-
-      carousel?.addEventListener('mouseleave', () => {
-        this.isHovered = false;
-        this.startAutoScroll();
-      });
-
-      // Touch events
-      this.track.addEventListener('touchstart', (e) => this.touchStart(e));
-      this.track.addEventListener('touchmove', (e) => this.touchMove(e));
-      this.track.addEventListener('touchend', () => this.touchEnd());
-
-      // Mouse events
-      this.track.addEventListener('mousedown', (e) => this.touchStart(e));
-      this.track.addEventListener('mousemove', (e) => this.touchMove(e));
-      this.track.addEventListener('mouseup', () => this.touchEnd());
-      this.track.addEventListener('mouseleave', () => this.touchEnd());
-    }
-
-    private touchStart(e: TouchEvent | MouseEvent): void {
-      this.isDragging = true;
-      this.startPos = this.getPositionX(e);
-      this.stopAutoScroll();
-    }
-
-    private touchMove(e: TouchEvent | MouseEvent): void {
-      if (!this.isDragging) return;
-
-      const currentPosition = this.getPositionX(e);
-      const diff = currentPosition - this.startPos;
-      this.currentTranslate = this.prevTranslate + diff;
-      this.setTransform(this.currentTranslate);
-    }
-
-    private touchEnd(): void {
-      this.isDragging = false;
-      const movedBy = this.currentTranslate - this.prevTranslate;
-
-      if (Math.abs(movedBy) > this.cardWidth / 4) {
-        if (movedBy < 0) {
-          this.next();
-        } else {
-          this.prev();
-        }
-      } else {
-        this.goToSlide(this.currentIndex);
-      }
-
-      if (!this.isHovered) {
-        this.startAutoScroll();
-      }
-    }
-
-    private getPositionX(e: TouchEvent | MouseEvent): number {
-      return e instanceof TouchEvent ? e.touches[0].clientX : e.clientX;
-    }
-
-    private setTransform(translate: number): void {
-      if (!this.track) return;
-      this.track.style.transform = `translateX(${translate}px)`;
-    }
-
-    private startAutoScroll(): void {
-      if (this.autoScrollInterval) return;
-      this.autoScrollInterval = window.setInterval(() => {
-        if (!this.isHovered) {
-          this.next();
-        }
-      }, 3000);
-    }
-
-    private stopAutoScroll(): void {
-      if (this.autoScrollInterval) {
-        window.clearInterval(this.autoScrollInterval);
-        this.autoScrollInterval = null;
-      }
-    }
-
-    private prev(): void {
-      this.currentIndex = (this.currentIndex - 1 + this.cards.length) % this.cards.length;
-      this.goToSlide(this.currentIndex);
-    }
-
-    private next(): void {
-      this.currentIndex = (this.currentIndex + 1) % this.cards.length;
-      this.goToSlide(this.currentIndex);
-    }
-
-    private goToSlide(index: number): void {
-      if (!this.track) return;
-      
-      this.currentIndex = index;
-      const offset = -(this.cardWidth + 32) * this.currentIndex;
-      this.currentTranslate = offset;
-      this.prevTranslate = offset;
-      
-      this.track.style.transform = `translateX(${offset}px)`;
-
-      // Reset to start when reaching the duplicate section
-      if (index >= this.cards.length / 2) {
-        setTimeout(() => {
-          if (!this.track) return;
-          this.track.style.transition = 'none';
-          this.currentIndex = 0;
-          const resetOffset = 0;
-          this.track.style.transform = `translateX(${resetOffset}px)`;
-          setTimeout(() => {
-            if (!this.track) return;
-            this.track.style.transition = 'transform 0.5s ease-in-out';
-          }, 50);
-        }, 500);
-      }
-    }
-  }
-
-  // Initialize carousel when the DOM is loaded
-  document.addEventListener('DOMContentLoaded', () => {
-    new Carousel();
-  });
-</script>

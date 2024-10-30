@@ -61,7 +61,7 @@ const slides = [
 
 <style>
   .about {
-    padding: 6rem 2rem;
+    padding: 6rem 2rem 3rem 2rem;
     background-color: #fff;
     min-height: 100vh;
     display: flex;
@@ -160,7 +160,7 @@ const slides = [
 
   @media (max-width: 1024px) {
     .about {
-      padding: 4rem 1rem;
+      padding: 4rem 1rem 2rem 1rem;
     }
 
     .about-content {
@@ -183,49 +183,95 @@ const slides = [
 </style>
 
 <script>
-  let currentSlide = 0;
-  const slides = document.querySelectorAll('.about-slide');
-  const indicators = document.querySelectorAll('.indicator');
-  const slideCount = slides.length;
-  const slideInterval = 8000; // 8 seconds per slide
+  class AboutSlider {
+    private slides: HTMLElement[];
+    private indicators: HTMLElement[];
+    private currentSlide: number;
+    private intervalId: number | null;
+    private isHovered: boolean;
 
-  function showSlide(index: number) {
-    slides.forEach(slide => {
-      slide.classList.remove('active');
-    });
-    indicators.forEach(indicator => {
-      indicator.classList.remove('active');
-    });
+    constructor() {
+      this.slides = Array.from(document.querySelectorAll('.about-slide'));
+      this.indicators = Array.from(document.querySelectorAll('.indicator'));
+      this.currentSlide = 0;
+      this.intervalId = null;
+      this.isHovered = false;
 
-    slides[index].classList.add('active');
-    indicators[index].classList.add('active');
+      this.init();
+    }
+
+    private init(): void {
+      if (!this.slides.length || !this.indicators.length) return;
+
+      // Set up click handlers for indicators
+      this.indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          this.showSlide(index);
+          this.resetInterval();
+        });
+      });
+
+      // Set up hover handlers
+      const aboutSection = document.querySelector('.about');
+      if (aboutSection) {
+        aboutSection.addEventListener('mouseenter', () => {
+          this.isHovered = true;
+          this.clearInterval();
+        });
+
+        aboutSection.addEventListener('mouseleave', () => {
+          this.isHovered = false;
+          this.startInterval();
+        });
+      }
+
+      // Start the automatic slideshow
+      this.startInterval();
+    }
+
+    private showSlide(index: number): void {
+      if (!this.slides[index] || !this.indicators[index]) return;
+
+      // Remove active class from current slide and indicator
+      this.slides[this.currentSlide]?.classList.remove('active');
+      this.indicators[this.currentSlide]?.classList.remove('active');
+
+      // Add active class to new slide and indicator
+      this.slides[index].classList.add('active');
+      this.indicators[index].classList.add('active');
+
+      this.currentSlide = index;
+    }
+
+    private nextSlide(): void {
+      const nextIndex = (this.currentSlide + 1) % this.slides.length;
+      this.showSlide(nextIndex);
+    }
+
+    private startInterval(): void {
+      if (this.intervalId) return;
+      this.intervalId = window.setInterval(() => {
+        if (!this.isHovered) {
+          this.nextSlide();
+        }
+      }, 8000);
+    }
+
+    private clearInterval(): void {
+      if (this.intervalId) {
+        window.clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
+    }
+
+    private resetInterval(): void {
+      this.clearInterval();
+      this.startInterval();
+    }
   }
 
-  function nextSlide() {
-    currentSlide = (currentSlide + 1) % slideCount;
-    showSlide(currentSlide);
-  }
-
-  // Auto-advance slides
-  let intervalId = setInterval(nextSlide, slideInterval);
-
-  // Click handlers for indicators
-  indicators.forEach((indicator, index) => {
-    indicator.addEventListener('click', () => {
-      clearInterval(intervalId);
-      currentSlide = index;
-      showSlide(currentSlide);
-      intervalId = setInterval(nextSlide, slideInterval);
-    });
-  });
-
-  // Pause on hover
-  const aboutSection = document.querySelector('.about');
-  aboutSection?.addEventListener('mouseenter', () => {
-    clearInterval(intervalId);
-  });
-
-  aboutSection?.addEventListener('mouseleave', () => {
-    intervalId = setInterval(nextSlide, slideInterval);
+  // Initialize the slider when the DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    new AboutSlider();
   });
 </script>
