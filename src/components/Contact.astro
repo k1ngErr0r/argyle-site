@@ -5,7 +5,7 @@
   <div class="contact-container">
     <h2>Contact us now for a free consultation</h2>
     <div class="contact-content">
-      <form id="contact-form" class="contact-form" action="https://formsubmit.co/your-email@example.com" method="POST">
+      <form id="contact-form" class="contact-form">
         <div class="form-group">
           <label for="name">Name *</label>
           <input type="text" id="name" name="name" required>
@@ -20,13 +20,6 @@
         </div>
         <button type="submit">Submit</button>
       </form>
-
-      <!-- Thank You Message -->
-      <div id="thank-you-message" style="display: none;">
-        <h3>Thank you for contacting us!</h3>
-        <p>We’ll get back to you shortly.</p>
-      </div>
-
       <div class="contact-info">
         <p>Argyle Technology Ltd</p>
         <p>Contact Number: 07834280843</p>
@@ -103,25 +96,6 @@
 </style>
 
 <script>
-  const form = document.getElementById('contact-form');
-  const thankYouMessage = document.getElementById('thank-you-message');
 
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevent the default form submission
-    const formData = new FormData(form);
-
-    // Send form data to FormSubmit
-    const response = await fetch(form.action, {
-      method: form.method,
-      body: formData,
-    });
-
-    if (response.ok) {
-      // Hide the form and show the thank-you message
-      form.style.display = 'none';
-      thankYouMessage.style.display = 'block';
-    } else {
-      alert("Oops! There was a problem submitting your form.");
-    }
-  });
-</script>
+    // Add your form submission logic here
+    // You can use services like Formspree or your own API endpoint
