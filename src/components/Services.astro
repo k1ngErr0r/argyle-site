@@ -95,13 +95,15 @@ const services = [
     padding: 0 2rem;
   }
 
-  .services-track:hover {
-    animation-play-state: paused;
+  @media (hover: hover) {
+    .services-track:hover {
+      animation-play-state: paused;
+    }
   }
 
   .service-card {
     flex: 0 0 350px;
-    padding: 1.5rem;
+    padding: 2rem;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -117,7 +119,7 @@ const services = [
   .service-icon {
     width: 96px;
     height: 96px;
-    border-radius: 40%;
+    border-radius: 50%;
     margin: 0 auto 1.5rem;
     display: flex;
     align-items: center;
@@ -145,7 +147,7 @@ const services = [
       transform: translateX(0);
     }
     100% {
-      transform: translateX(calc(-25% / 3));
+      transform: translateX(calc(-30% / 3));
     }
   }
 
@@ -162,5 +164,25 @@ const services = [
     .service-card {
       flex: 0 0 300px;
     }
+
+    /* Disable hover effects on mobile */
+    .service-card:hover {
+      transform: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
   }
 </style>
+
+<script>
+  // Ensure animation continues after visibility changes
+  document.addEventListener('visibilitychange', () => {
+    const track = document.querySelector('.services-track');
+    if (track) {
+      if (document.hidden) {
+        track.style.animationPlayState = 'paused';
+      } else {
+        track.style.animationPlayState = 'running';
+      }
+    }
+  });
+</script>
